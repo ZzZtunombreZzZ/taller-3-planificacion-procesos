@@ -25,6 +25,7 @@ RR: 20 turnos, termina en t=49 (P5).
 | [round_robin.md](round_robin.md) / [gantt_rr.md](gantt_rr.md) / [metricas_rr.csv](metricas_rr.csv) | Registro de turnos y cola, Gantt y métricas RR |
 | [comparacion.md](comparacion.md) | Comparación, conclusiones y tabla para el análisis grupal |
 | [validacion.md](validacion.md) | Verificaciones y estado de la integración |
+| [Ejercicio_1.xlsx](Ejercicio_1.xlsx) | Hojas FIFO y SJF de Darío Leal (Gantt y métricas) |
 | `referencia.py`, `generar_docs.py` | Implementación de referencia independiente y generador de los `.md`/`.csv` |
 | `../../../tests/test_taller3_ejercicio1.py` | Pruebas automáticas |
 
