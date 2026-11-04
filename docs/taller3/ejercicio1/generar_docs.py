@@ -17,13 +17,9 @@ def f2(x):
 def todo(P, gs, dec, gr, turnos, ms, mr):
     ps, pr = R.promedios(ms), R.promedios(mr)
     pf, pj = R.promedios(R.metricas(P, R.fifo(P))), R.promedios(R.metricas(P, R.sjf(P)))
-    lleg = {p: a for p, a, _ in P}
-    # ---------------- Gantt
     w("gantt_srtf.md", "# Gantt SRTF — Ejercicio 1\n\n" + R.gantt_md(gs, "SRTF"))
     w("gantt_rr.md", "# Gantt Round Robin (q=3) — Ejercicio 1\n\n" + R.gantt_md(gr, "Round Robin q=3"))
 
-    # ---------------- SRTF
-    rest = {p: r for p, _, r in P}
     s = ["# SRTF — Ejercicio 1", "",
          "Shortest Remaining Time First (apropiativo). Criterio: en cada instante de decisión "
          "(llegada o terminación) corre el proceso listo con menor tiempo **restante**; "
@@ -72,7 +68,6 @@ def todo(P, gs, dec, gr, turnos, ms, mr):
           "Gantt: ver [gantt_srtf.md](gantt_srtf.md). Datos: [metricas_srtf.csv](metricas_srtf.csv)."]
     w("srtf.md", "\n".join(s))
 
-    # ---------------- RR
     s = ["# Round Robin (quantum = 3) — Ejercicio 1", "",
          "Cola FIFO de listos. Cada turno dura `min(3, restante)`. Si el proceso no termina, "
          "vuelve al **final** de la cola. Sin costo de cambio de contexto.", "",
@@ -105,7 +100,6 @@ def todo(P, gs, dec, gr, turnos, ms, mr):
           "Gantt: ver [gantt_rr.md](gantt_rr.md). Datos: [metricas_rr.csv](metricas_rr.csv)."]
     w("round_robin.md", "\n".join(s))
 
-    # ---------------- Comparación
     mxe = lambda m, k: max(m, key=lambda x: x[k])
     s = ["# Comparación SRTF vs Round Robin (q=3) — Ejercicio 1", "",
          "| Métrica | SRTF | Round Robin q=3 | Mejor |", "|---|---:|---:|---|",

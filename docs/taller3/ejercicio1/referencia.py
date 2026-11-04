@@ -93,7 +93,7 @@ def rr(procs, q=QUANTUM):
     pend = sorted(procs, key=lambda x: (x[1], nat(x[0])))
     cola, t, segs, turnos = [], 0, [], []
 
-    def admitir(hasta, ya):
+    def admitir(hasta):
         nuevos = []
         while pend and pend[0][1] <= hasta:
             p = pend.pop(0)[0]
@@ -101,24 +101,25 @@ def rr(procs, q=QUANTUM):
             nuevos.append(p)
         return nuevos
 
-    ingresos = admitir(0, [])
+    admitir(0)
     while cola or pend:
         if not cola:
             t = pend[0][1]
-            ingresos = admitir(t, [])
+            admitir(t)
             continue
         p = cola.pop(0)
         antes = rest[p]
-        cola_inicio = [p] + list(cola)
         d = min(q, antes)
         rest[p] -= d
         t_fin = t + d
-        nuevos = admitir(t_fin, [])           # llegadas hasta t_fin inclusive
+        nuevos = admitir(t_fin)
         reinc = rest[p] > 0
         if reinc:
-            cola.append(p)                    # despues de las llegadas
-        segs.append((p, t, t_fin)) if not (segs and segs[-1][0] == p and segs[-1][2] == t) \
-            else segs.__setitem__(-1, (p, segs[-1][1], t_fin))
+            cola.append(p)
+        if segs and segs[-1][0] == p and segs[-1][2] == t:
+            segs[-1] = (p, segs[-1][1], t_fin)
+        else:
+            segs.append((p, t, t_fin))
         turnos.append(dict(t=t, pid=p, antes=antes, dur=d, despues=rest[p],
                            nuevos=nuevos, reinc=reinc, cola=list(cola), fin=t_fin))
         t = t_fin
