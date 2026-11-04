@@ -20,7 +20,6 @@ import referencia as R                                        # noqa: E402
 EJ1 = [("P1", 0, 10), ("P2", 1, 4), ("P3", 2, 7), ("P4", 3, 2), ("P5", 4, 9),
        ("P6", 5, 3), ("P7", 6, 6), ("P8", 7, 1), ("P9", 8, 5), ("P10", 9, 2)]
 
-# (inicio, fin, espera, retorno, respuesta) por proceso
 ESP_SRTF = {"P1": (0, 40, 30, 40, 0), "P2": (1, 5, 0, 4, 0), "P3": (24, 31, 22, 29, 22),
             "P4": (5, 7, 2, 4, 2), "P5": (40, 49, 36, 45, 36), "P6": (8, 11, 3, 6, 3),
             "P7": (18, 24, 12, 18, 12), "P8": (7, 8, 0, 1, 0), "P9": (13, 18, 5, 10, 5),
@@ -94,16 +93,6 @@ def a_linea(segs):
     return out
 
 
-def _a_segs(linea):
-    segs = []
-    for t, p in enumerate(linea):
-        if segs and segs[-1][0] == p and segs[-1][2] == t:
-            segs[-1] = (p, segs[-1][1], t + 1)
-        else:
-            segs.append((p, t, t + 1))
-    return segs
-
-
 class RefSRTF(unittest.TestCase):
     def test_gantt_completo_ejercicio1(self):
         segs, _ = R.srtf(EJ1)
@@ -125,21 +114,21 @@ class RefSRTF(unittest.TestCase):
         self.assertEqual((t31[2], t31[3]), ("P1", {"P1": 9, "P5": 9}))
 
     def test_empate_de_restante_no_expropia(self):
-        # P1 (rest 2) en CPU; llega P2 con 2: no expropia (mismo restante)
+
         segs, _ = R.srtf([("P1", 0, 4), ("P2", 2, 2)])
         self.assertEqual(segs, [("P1", 0, 4), ("P2", 4, 6)])
 
     def test_desempate_por_llegada_y_luego_id(self):
         segs, _ = R.srtf([("P1", 0, 3), ("P3", 1, 2), ("P2", 1, 2)])
-        self.assertEqual([s[0] for s in segs], ["P1", "P2", "P3"])   # mismo restante+llegada: menor id
+        self.assertEqual([s[0] for s in segs], ["P1", "P2", "P3"])
         segs, _ = R.srtf([("P1", 0, 5), ("P2", 1, 4), ("P3", 2, 3), ("P4", 3, 2)])
-        self.assertEqual([s[0] for s in segs], ["P1", "P4", "P3", "P2"])   # todos empatan: nadie expropia
+        self.assertEqual([s[0] for s in segs], ["P1", "P4", "P3", "P2"])
         segs, _ = R.srtf([("P1", 0, 8), ("P2", 1, 4), ("P3", 2, 3), ("P4", 3, 1)])
         self.assertEqual([s[0] for s in segs], ["P1", "P2", "P4", "P2", "P3", "P1"])
 
     def test_srtf_con_otros_datos_coincide_con_oraculo(self):
         casos = [[("P1", 0, 7), ("P2", 2, 4), ("P3", 4, 1), ("P4", 5, 4)],
-                 [("P1", 3, 2), ("P2", 10, 1)],                       # CPU ociosa inicial y central
+                 [("P1", 3, 2), ("P2", 10, 1)],
                  [("P1", 0, 6), ("P2", 0, 6), ("P3", 0, 2)]]
         for c in casos:
             with self.subTest(c=c):
@@ -180,7 +169,7 @@ class RefRR(unittest.TestCase):
 
     def test_llegada_en_el_vencimiento_del_quantum_entra_antes(self):
         _, turnos = R.rr(EJ1)
-        for idx, nuevo in ((0, "P4"), (1, "P7"), (2, "P10")):      # t=3, 6, 9
+        for idx, nuevo in ((0, "P4"), (1, "P7"), (2, "P10")):
             c = turnos[idx]["cola"]
             self.assertLess(c.index(nuevo), c.index(turnos[idx]["pid"]))
         self.assertEqual(turnos[0]["nuevos"], ["P2", "P3", "P4"])
@@ -199,13 +188,13 @@ class RefRR(unittest.TestCase):
     def test_rr_otros_datos_coincide_con_oraculo(self):
         casos = [[("P1", 0, 5), ("P2", 1, 3), ("P3", 3, 2)],
                  [("P1", 0, 4), ("P2", 0, 4), ("P3", 0, 1)],
-                 [("P1", 0, 3), ("P2", 3, 3)]]                      # llega justo al terminar P1
+                 [("P1", 0, 3), ("P2", 3, 3)]]
         for c in casos:
             with self.subTest(c=c):
                 self.assertEqual(a_linea(R.rr(c)[0]), oraculo_rr(c, 3))
 
     def test_llegada_exacta_al_agotar_quantum_caso_minimo(self):
-        # P1 vence en t=3 y P2 llega en t=3: P2 debe ir antes que P1 reincorporado
+
         segs, turnos = R.rr([("P1", 0, 5), ("P2", 3, 1), ("P3", 1, 4)])
         self.assertEqual([s[0] for s in segs[:4]], ["P1", "P3", "P2", "P1"])
 
@@ -234,7 +223,7 @@ class Metricas(unittest.TestCase):
 
     def test_invariantes_comunes(self):
         for segs in (R.srtf(EJ1)[0], R.rr(EJ1)[0]):
-            lin = a_linea(segs)                                  # falla si hay hueco/solape
+            lin = a_linea(segs)
             self.assertEqual(len(lin), 49)
             self.assertEqual(segs[-1][2], 49)
             llegada = {p: a for p, a, _ in EJ1}
@@ -249,7 +238,7 @@ class Metricas(unittest.TestCase):
         for nombre, segs in (("metricas_srtf.csv", R.srtf(EJ1)[0]), ("metricas_rr.csv", R.rr(EJ1)[0])):
             with open(os.path.join(R.AQUI, nombre), newline="") as f:
                 filas = list(csv.DictReader(f))
-            self.assertEqual(len(filas), 11)                     # 10 procesos + promedio
+            self.assertEqual(len(filas), 11)
             for fila, m in zip(filas, R.metricas(EJ1, segs)):
                 self.assertEqual((fila["Proceso"], int(fila["Inicio"]), int(fila["Finalizacion"]),
                                   int(fila["Espera"]), int(fila["Retorno"]), int(fila["Respuesta"])),
