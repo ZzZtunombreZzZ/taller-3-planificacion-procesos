@@ -2,6 +2,12 @@
 
 Entrega de la etapa 03: comparación de FIFO/FCFS, SJF, SRTF y Round Robin para dos cargas de trabajo. Cada ejercicio reúne diagramas de Gantt, métricas y una conclusión comparativa.
 
+## ZIP para entregar
+
+[Descargar Taller_3_Etapa_03.zip](entregas/Taller_3_Etapa_03.zip): informe conjunto, Excel completo de cada ejercicio e instrucciones. El paquete no incluye nombres de integrantes ni los archivos de aportes individuales.
+
+Para regenerarlo: `python3 scripts/preparar_entrega.py` (requiere `openpyxl` y `python-docx`).
+
 ## Ejercicios
 
 | Ejercicio | Desarrollo y comparación | Archivos de entrega |
