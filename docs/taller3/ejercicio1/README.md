@@ -1,6 +1,6 @@
 # Taller 3 — Ejercicio 1 (procesos mixtos): SRTF y Round Robin q=3
 
-Responsable: José Palma. Alcance: **solo SRTF y Round Robin** del ejercicio 1 (Taller 3, no el simulador/interfaz del Taller 4). FIFO y SJF (Darío Leal) y el ejercicio 2 **no** forman parte de este trabajo.
+Responsable: José Palma. Alcance: **solo SRTF y Round Robin** del ejercicio 1 (Taller 3, no el simulador/interfaz del Taller 4). FIFO y SJF del ejercicio 1 corresponden a Darío Leal y se incluyen en el Excel de esta carpeta. El ejercicio 2 se documenta en [su propia carpeta](../ejercicio2/README.md): FIFO/SJF de Nicolás Portilla corregidos; SRTF y RR q=2 de Luis Felipe pendientes de integrar.
 
 Supuestos: una ráfaga de CPU por proceso, sin cambio de contexto, sin E/S ni prioridades, un proceso a la vez. Empates: llegó antes, luego menor ID. Espera = tiempo en cola de listos = Retorno − Ráfaga.
 
